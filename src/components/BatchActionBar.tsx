@@ -29,7 +29,7 @@ export const BatchActionBar: React.FC = () => {
       </div>
 
       <div className="flex items-center gap-1.5 sm:gap-2">
-        {/* Complete All */}
+        {/* Complete */}
         <button
           type="button"
           onClick={batchComplete}
@@ -39,7 +39,7 @@ export const BatchActionBar: React.FC = () => {
           <span>Complete</span>
         </button>
 
-        {/* Priority Dropdown */}
+        {/* Priority */}
         <div className="relative group">
           <button
             type="button"
@@ -73,7 +73,7 @@ export const BatchActionBar: React.FC = () => {
           </div>
         </div>
 
-        {/* Category Dropdown */}
+        {/* Category */}
         <div className="relative group">
           <button
             type="button"
@@ -96,7 +96,7 @@ export const BatchActionBar: React.FC = () => {
           </div>
         </div>
 
-        {/* Delete All */}
+        {/* Delete */}
         <button
           type="button"
           onClick={batchDelete}
