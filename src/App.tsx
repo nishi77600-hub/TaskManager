@@ -48,16 +48,16 @@ const AppContent: React.FC = () => {
       {/* Mobile Sidebar Backdrop */}
       {mobileSidebarOpen && (
         <div
-          id="mobile-sidebar-backdrop"
+          id="mobile-sidebar "
           onClick={() => setMobileSidebarOpen(false)}
           className="fixed inset-0 z-30 bg-black/40 backdrop-blur-xs md:hidden"
         />
       )}
 
-      {/* Sidebar Navigation */}
+      {/* Sidebar */}
       <Sidebar mobileOpen={mobileSidebarOpen} setMobileOpen={setMobileSidebarOpen} />
 
-      {/* Main Workspace Area */}
+      {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0 min-h-screen">
         <Header onToggleMobileMenu={() => setMobileSidebarOpen(prev => !prev)} />
 
@@ -75,7 +75,7 @@ const AppContent: React.FC = () => {
         </main>
       </div>
 
-      {/* Global Modals, Dialogs, Command Palette, and Toasts */}
+      {/*  Popups and notifications */}
       <CommandPalette />
       <TaskModal />
       <ConfirmDialog />
