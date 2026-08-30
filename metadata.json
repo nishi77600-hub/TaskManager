@@ -1,6 +1,5 @@
 {
   "name": "Task Manager",
-  "description": "Smart task management system built with an editorial calm-neutral aesthetic, priority & category filtering, and real-time statistics.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "description": "A task management application for creating, organizing and tracking tasks.",
+  "requestFramePermissions": []
 }
