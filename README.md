@@ -40,7 +40,9 @@ npm run dev
 
 ### 3. Open in browser
 
-Open the local URL shown in the terminal.
+After running the command, open the local URL shown in the terminal, usually:
+
+http://localhost:5173/
 
 ## Project Structure
 
