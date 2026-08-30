@@ -1,12 +1,8 @@
-/**
- * Date utilities aligned with Java LocalDate concepts
- */
-
-// Reference date for application (2026-08-17)
-export const CURRENT_DATE_STRING = '2026-08-17';
+```ts
+// Date helper functions
 
 export function getTodayDateString(): string {
-  // If browser date is available, fallback to today or the reference current local time
+  // Get today's date
   const now = new Date();
   const year = now.getFullYear();
   const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -22,7 +18,7 @@ const MONTH_NAMES_SHORT = [
 export type DateFormatStyle = 'editorial' | 'dd-mm-yyyy' | 'yyyy-mm-dd' | 'mm-dd-yyyy';
 
 /**
- * Format ISO date string (YYYY-MM-DD) to editorial presentation (e.g., "20 Aug 2026")
+ * Format date like 20 Aug 2026
  */
 export function formatEditorialDate(dateStr: string): string {
   if (!dateStr) return '';
@@ -39,7 +35,7 @@ export function formatEditorialDate(dateStr: string): string {
 }
 
 /**
- * Format ISO date string to DD-MM-YYYY (Java standard pattern)
+ * Format date as DD-MM-YYYY
  */
 export function formatDDMMYYYY(dateStr: string): string {
   if (!dateStr) return '';
@@ -49,7 +45,7 @@ export function formatDDMMYYYY(dateStr: string): string {
 }
 
 /**
- * Format ISO date string to MM/DD/YYYY
+ * Format date as MM/DD/YYYY
  */
 export function formatMMDDYYYY(dateStr: string): string {
   if (!dateStr) return '';
@@ -59,10 +55,11 @@ export function formatMMDDYYYY(dateStr: string): string {
 }
 
 /**
- * Format ISO date by user selected preference style
+ * Format date based on selected style
  */
 export function formatDateByStyle(dateStr: string, style: DateFormatStyle = 'editorial'): string {
   if (!dateStr) return '';
+
   switch (style) {
     case 'dd-mm-yyyy':
       return formatDDMMYYYY(dateStr);
@@ -77,11 +74,11 @@ export function formatDateByStyle(dateStr: string, style: DateFormatStyle = 'edi
 }
 
 /**
- * Check if a pending task is overdue compared to reference date
+ * Check if a task is overdue
  */
 export function isOverdue(dueDateStr: string, completed: boolean): boolean {
   if (completed || !dueDateStr) return false;
-  
+
   const today = getTodayDateString();
   return dueDateStr < today;
 }
@@ -99,11 +96,14 @@ export function isDueToday(dueDateStr: string): boolean {
  */
 export function isDueThisWeek(dueDateStr: string): boolean {
   if (!dueDateStr) return false;
+
   const today = getTodayDateString();
+
   if (dueDateStr < today) return false;
 
   const todayDate = new Date(today);
   const targetDate = new Date(dueDateStr);
+
   const diffTime = targetDate.getTime() - todayDate.getTime();
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
@@ -111,16 +111,21 @@ export function isDueThisWeek(dueDateStr: string): boolean {
 }
 
 /**
- * Validate date string (checks leap years, valid days per month) - mimicking LocalDate.parse()
+ * Check if the date is valid
  */
 export function isValidDate(dateStr: string): boolean {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return false;
+
   const parts = dateStr.split('-');
   const y = parseInt(parts[0], 10);
   const m = parseInt(parts[1], 10);
   const d = parseInt(parts[2], 10);
 
-  if (y < 1900 || y > 2100 || m < 1 || m > 12 || d < 1) return false;
+  if (y < 1900 || y > 2100 || m < 1 || m > 12 || d < 1) {
+    return false;
+  }
+
   const daysInMonth = new Date(y, m, 0).getDate();
   return d <= daysInMonth;
 }
+```
