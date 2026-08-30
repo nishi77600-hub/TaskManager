@@ -116,7 +116,7 @@ const DATE_FORMAT_KEY = 'taskmanager_date_format_v2';
 const SOUND_KEY = 'taskmanager_sound_enabled_v2';
 
 export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // 1. Tasks state with local persistence
+  //  Tasks
   const [tasks, setTasks] = useState<Task[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -134,7 +134,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const [lastDeleted, setLastDeleted] = useState<{ task: Task; index: number } | null>(null);
 
-  // 2. Navigation & filter states
+  //  Navigation & filters
   const [activeTab, setActiveTab] = useState<NavigationTab>('overview');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -143,17 +143,17 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [sortBy, setSortBy] = useState<SortField>('dueDate');
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
 
-  // 3. Modals & Dialogs
+  //  Modals & Dialogs
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [confirmDialog, setConfirmDialog] = useState<ConfirmDialogState | null>(null);
   const [toast, setToast] = useState<ToastNotification | null>(null);
 
-  // 4. Batch selection
+  // Selected tasks
   const [selectedTaskIds, setSelectedTaskIds] = useState<string[]>([]);
 
-  // 5. Sound toggle
+  // Sound
   const [soundEnabled, setSoundEnabled] = useState<boolean>(() => {
     try {
       const saved = localStorage.getItem(SOUND_KEY);
@@ -174,7 +174,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setSoundEnabled(prev => !prev);
   }, []);
 
-  // 6. Day / Night Theme state
+  // Theme
   const [theme, setThemeState] = useState<ThemeMode>(() => {
     try {
       const savedTheme = localStorage.getItem(THEME_KEY);
@@ -188,7 +188,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return 'light';
   });
 
-  // 7. Date format preference
+  // Date format 
   const [dateFormat, setDateFormatState] = useState<DateFormatStyle>(() => {
     try {
       const saved = localStorage.getItem(DATE_FORMAT_KEY) as DateFormatStyle;
@@ -199,7 +199,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return 'editorial';
   });
 
-  // 8. Focus / Pomodoro Timer State
+  // Focus timer
   const [focusTimer, setFocusTimer] = useState<FocusTimerState>({
     isActive: false,
     isPaused: false,
@@ -208,7 +208,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     focusedTaskId: null,
   });
 
-  // Timer Tick
+  // Timer
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
     if (focusTimer.isActive && !focusTimer.isPaused && focusTimer.timeLeft > 0) {
@@ -264,7 +264,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }));
   }, []);
 
-  // Theme synchronization
+  // Save Theme
   useEffect(() => {
     try {
       localStorage.setItem(THEME_KEY, theme);
@@ -296,7 +296,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch {}
   }, []);
 
-  // Tasks local storage sync
+  // Save tasks
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
@@ -394,7 +394,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setConfirmDialog(null);
   }, []);
 
-  // Task Operations
+   // Task Operations
   const addTask = useCallback((data: {
     title: string;
     category: string;
@@ -531,14 +531,14 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setTasks([]);
     setSelectedTaskIds([]);
     soundFx.playPop();
-    showToast('All tasks cleared from workspace', 'info');
+    showToast('All tasks cleared', 'info');
   }, [showToast]);
 
   const resetToDemoData = useCallback(() => {
     setTasks(INITIAL_TASKS);
     setSelectedTaskIds([]);
     soundFx.playCelebration();
-    showToast('Reset to default curated tasks', 'success');
+    showToast('Tasks reset to default data', 'success');
   }, [showToast]);
 
   // Batch Selection Handlers
@@ -556,7 +556,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Filtered and Sorted Tasks
   const filteredTasks = useMemo<Task[]>(() => {
     return tasks.filter(task => {
-      // 1. Search query
+      // Search
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase().trim();
         const matchesTitle = task.title.toLowerCase().includes(q);
@@ -566,18 +566,18 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (!matchesTitle && !matchesCategory && !matchesNotes && !matchesTags) return false;
       }
 
-      // 2. Status filter
+      // Status
       if (activeTab === 'pending' && task.completed) return false;
       if (activeTab === 'completed' && !task.completed) return false;
       if (statusFilter === 'pending' && task.completed) return false;
       if (statusFilter === 'completed' && !task.completed) return false;
 
-      // 3. Category Filter
+      // Category
       if (selectedCategory !== 'all' && task.category !== selectedCategory) {
         return false;
       }
 
-      // 4. Priority Filter
+      // Priority
       if (selectedPriority !== 'all' && task.priority !== selectedPriority) {
         return false;
       }
@@ -585,6 +585,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return true;
     }).sort((a, b) => {
       let comparison = 0;
+
       if (sortBy === 'dueDate') {
         comparison = a.dueDate.localeCompare(b.dueDate);
       } else if (sortBy === 'priority') {
@@ -598,33 +599,59 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       return sortOrder === 'asc' ? comparison : -comparison;
     });
-  }, [tasks, searchQuery, activeTab, statusFilter, selectedCategory, selectedPriority, sortBy, sortOrder]);
+  }, [
+    tasks,
+    searchQuery,
+    activeTab,
+    statusFilter,
+    selectedCategory,
+    selectedPriority,
+    sortBy,
+    sortOrder
+  ]);
 
   const selectAllVisibleTasks = useCallback(() => {
     soundFx.playPop();
     const visibleIds = filteredTasks.map(t => t.id);
-    setSelectedTaskIds(prev => (prev.length === visibleIds.length ? [] : visibleIds));
+    setSelectedTaskIds(prev =>
+      prev.length === visibleIds.length ? [] : visibleIds
+    );
   }, [filteredTasks]);
 
   const batchComplete = useCallback(() => {
     if (selectedTaskIds.length === 0) return;
+
     setTasks(prev =>
-      prev.map(t => (selectedTaskIds.includes(t.id) ? { ...t, completed: true } : t))
+      prev.map(t =>
+        selectedTaskIds.includes(t.id)
+          ? { ...t, completed: true }
+          : t
+      )
     );
+
     soundFx.playCelebration();
-    showToast(`Marked ${selectedTaskIds.length} tasks as completed`, 'success');
+    showToast(
+      `Marked ${selectedTaskIds.length} tasks as completed`,
+      'success'
+    );
     setSelectedTaskIds([]);
   }, [selectedTaskIds, showToast]);
 
   const batchDelete = useCallback(() => {
     if (selectedTaskIds.length === 0) return;
+
     openConfirmDialog({
       title: `Delete ${selectedTaskIds.length} selected tasks?`,
-      message: 'These tasks will be removed from your workspace.',
+      message: 'These tasks will be deleted.',
       confirmButtonText: 'Delete Selected',
       onConfirm: () => {
-        setTasks(prev => prev.filter(t => !selectedTaskIds.includes(t.id)));
-        showToast(`Deleted ${selectedTaskIds.length} tasks`, 'info');
+        setTasks(prev =>
+          prev.filter(t => !selectedTaskIds.includes(t.id))
+        );
+        showToast(
+          `Deleted ${selectedTaskIds.length} tasks`,
+          'info'
+        );
         setSelectedTaskIds([]);
       },
     });
@@ -632,57 +659,102 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const batchSetPriority = useCallback((priority: Priority) => {
     if (selectedTaskIds.length === 0) return;
+
     setTasks(prev =>
-      prev.map(t => (selectedTaskIds.includes(t.id) ? { ...t, priority } : t))
+      prev.map(t =>
+        selectedTaskIds.includes(t.id)
+          ? { ...t, priority }
+          : t
+      )
     );
+
     soundFx.playPop();
-    showToast(`Set priority of ${selectedTaskIds.length} tasks to ${priority}`, 'success');
+    showToast(
+      `Set priority of ${selectedTaskIds.length} tasks to ${priority}`,
+      'success'
+    );
     setSelectedTaskIds([]);
   }, [selectedTaskIds, showToast]);
 
   const batchSetCategory = useCallback((category: string) => {
     if (selectedTaskIds.length === 0) return;
+
     setTasks(prev =>
-      prev.map(t => (selectedTaskIds.includes(t.id) ? { ...t, category } : t))
+      prev.map(t =>
+        selectedTaskIds.includes(t.id)
+          ? { ...t, category }
+          : t
+      )
     );
+
     soundFx.playPop();
-    showToast(`Moved ${selectedTaskIds.length} tasks to ${category}`, 'success');
+    showToast(
+      `Moved ${selectedTaskIds.length} tasks to ${category}`,
+      'success'
+    );
     setSelectedTaskIds([]);
   }, [selectedTaskIds, showToast]);
 
-  // Derived Statistics Calculation
+  // Statistics
   const stats = useMemo<TaskStatistics>(() => {
     const total = tasks.length;
     const completed = tasks.filter(t => t.completed).length;
     const pending = total - completed;
-    const completionRate = total === 0 ? 0 : Math.round((completed / total) * 100);
-    const overdueCount = tasks.filter(t => isOverdue(t.dueDate, t.completed)).length;
-    const highPriorityPending = tasks.filter(t => !t.completed && t.priority === 'High').length;
+    const completionRate =
+      total === 0 ? 0 : Math.round((completed / total) * 100);
+
+    const overdueCount = tasks.filter(
+      t => isOverdue(t.dueDate, t.completed)
+    ).length;
+
+    const highPriorityPending = tasks.filter(
+      t => !t.completed && t.priority === 'High'
+    ).length;
 
     // Completed today count
     const todayStr = new Date().toISOString().split('T')[0];
-    const completedTodayCount = tasks.filter(t => t.completed && t.dueDate === todayStr).length;
+
+    const completedTodayCount = tasks.filter(
+      t => t.completed && t.dueDate === todayStr
+    ).length;
 
     // Category Breakdown
-    const categoryMap: Record<string, { count: number; completedCount: number }> = {};
+    const categoryMap: Record<
+      string,
+      { count: number; completedCount: number }
+    > = {};
+
     tasks.forEach(t => {
       if (!categoryMap[t.category]) {
-        categoryMap[t.category] = { count: 0, completedCount: 0 };
+        categoryMap[t.category] = {
+          count: 0,
+          completedCount: 0
+        };
       }
+
       categoryMap[t.category].count += 1;
-      if (t.completed) categoryMap[t.category].completedCount += 1;
+
+      if (t.completed) {
+        categoryMap[t.category].completedCount += 1;
+      }
     });
 
-    const categoryBreakdown = Object.entries(categoryMap).map(([category, data]) => ({
-      category,
-      count: data.count,
-      completedCount: data.completedCount,
-    }));
+    const categoryBreakdown = Object.entries(categoryMap).map(
+      ([category, data]) => ({
+        category,
+        count: data.count,
+        completedCount: data.completedCount,
+      })
+    );
 
     // Priority Breakdown
     const priorities: Priority[] = ['High', 'Medium', 'Low'];
+
     const priorityBreakdown = priorities.map(priority => {
-      const pTasks = tasks.filter(t => t.priority === priority);
+      const pTasks = tasks.filter(
+        t => t.priority === priority
+      );
+
       return {
         priority,
         total: pTasks.length,
@@ -691,7 +763,8 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
     });
 
-    const streakDays = completed > 0 ? Math.min(completed + 2, 7) : 1;
+    const streakDays =
+      completed > 0 ? Math.min(completed + 2, 7) : 1;
 
     return {
       total,
@@ -778,8 +851,10 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 export const useTaskManager = () => {
   const context = useContext(TaskContext);
+
   if (!context) {
     throw new Error('useTaskManager must be used within a TaskProvider');
   }
+
   return context;
 };
