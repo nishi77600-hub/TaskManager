@@ -1,20 +1,63 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# Task Manager
 
-# Run and deploy your AI Studio app
+A simple task management web application made using React, TypeScript and Vite.
 
-This contains everything you need to run your app locally.
+## Features
 
-View your app in AI Studio: https://ai.studio/apps/f339d1fe-3860-432f-af32-205c6f747cd9
+* Add, edit and delete tasks
+* Mark tasks as completed or pending
+* Search tasks
+* Filter tasks by category and priority
+* Sort tasks
+* View task statistics
+* Focus timer
+* Task categories
+* Priority management
+* Dark mode
+* Save tasks using browser local storage
 
-## Run Locally
+## Technologies Used
 
-**Prerequisites:**  Node.js
+* React
+* TypeScript
+* Vite
+* Tailwind CSS
+* Lucide React
 
+## How to Run
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Start the project
+
+```bash
+npm run dev
+```
+
+### 3. Open in browser
+
+Open the local URL shown in the terminal.
+
+## Project Structure
+
+```text
+src/
+├── components/
+├── context/
+├── pages/
+├── utils/
+├── App.tsx
+├── main.tsx
+└── index.css
+```
+
+## Author
+
+Nishita
+
+B.Tech – Blockchain Engineering
+CGC University Mohali
